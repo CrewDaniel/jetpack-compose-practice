@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">JetpackCompose</string>
+    <string name="hide_content">Hide content</string>
+    <string name="show_content">Show content</string>
 </resources>
