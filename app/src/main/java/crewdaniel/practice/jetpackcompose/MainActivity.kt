@@ -6,11 +6,17 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.Icons.Filled
+import androidx.compose.material.icons.filled.Camera
+import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.runtime.*
@@ -25,83 +31,75 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            JetpackComposeTheme {
-                MyApp()
-            }
-        }
-    }
-}
-
-
-@Composable
-private fun MyApp() {
-    MemoList(listOf(Memo("title1", "content1"), Memo("title2", "content2")))
-}
-
-@Composable
-private fun MemoList(memos: List<Memo>) {
-    LazyColumn(modifier = Modifier.padding(vertical = 4.dp)) {
-        items(items = memos) { memo ->
-            MemoCard(memo)
+            App()
         }
     }
 }
 
 @Composable
-private fun MemoCard(memo: Memo) {
-    Card(
-        backgroundColor = MaterialTheme.colors.primary,
-        modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
-    ) {
-        CardContent(memo)
-    }
-}
-
-@Composable
-private fun CardContent(memo: Memo) {
-    var expanded by remember { mutableStateOf(false) }
-
-    Row(
-        modifier = Modifier
-            .padding(12.dp)
-            .animateContentSize(
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioMediumBouncy,
-                    stiffness = Spring.StiffnessLow
-                )
-            )
-    ) {
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .padding(12.dp)
-        ) {
-            Text(
-                text = memo.title,
-                style = MaterialTheme.typography.h4.copy(fontWeight = FontWeight.ExtraBold)
-            )
-            if (expanded) {
-                Text(text = memo.content)
-            }
-        }
-        IconButton(onClick = { expanded = !expanded }) {
-            Icon(
-                imageVector = if (expanded) Filled.ExpandLess else Filled.ExpandMore,
-                contentDescription = if (expanded) {
-                    stringResource(R.string.hide_content)
-                } else {
-                    stringResource(R.string.show_content)
-                }
-
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true, widthDp = 320)
-@Composable
-fun DefaultPreview() {
+fun App() {
     JetpackComposeTheme {
-        MemoList(listOf(Memo("title1", "content1"), Memo("title2", "content2")))
+        //  화면 바꾸기
+        MainScreen()
     }
+}
+
+@Composable
+fun MainScreen() {
+    MainScaffold()
+}
+
+@Composable
+fun MainScaffold() {
+    Scaffold(
+        topBar = { MainTopAppBar() },
+        floatingActionButton = { MainFab() }
+    ) {
+        MainBody(it)
+    }
+}
+
+@Composable
+fun MainTopAppBar() {
+    TopAppBar(title = { Text(text = "Camera Roll") })
+}
+
+@Composable
+fun MainFab() {
+    FloatingActionButton(onClick = { /*TODO*/ }) {
+        Icon(
+            imageVector = Icons.Filled.CameraAlt,
+            contentDescription = "open camera"
+        )
+    }
+}
+
+@Composable
+fun MainBody(paddingValues: PaddingValues) {
+    Surface(modifier = Modifier.padding(paddingValues = paddingValues)) {
+        ImageList()
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun ImageList(images: List<Image> = listOf(Image("1"), Image("2"), Image("3"), Image("4"))) {
+    LazyVerticalGrid(cells = GridCells.Fixed(3)) {
+        items(images) { image ->
+            ImageItem(image = image)
+        }
+    }
+}
+
+@Composable
+fun ImageItem(image: Image) {
+    Card {
+        Text(text = image.title)
+    }
+}
+
+@Preview
+@Composable
+fun PreviewImageList() {
+    ImageList(listOf(Image("title")))
 }
