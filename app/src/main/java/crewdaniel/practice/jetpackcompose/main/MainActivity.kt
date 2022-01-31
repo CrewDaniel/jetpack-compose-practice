@@ -3,59 +3,49 @@ package crewdaniel.practice.jetpackcompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
+import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.Icons.Filled
-import androidx.compose.material.icons.filled.Camera
 import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material.icons.filled.ExpandLess
-import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import crewdaniel.practice.jetpackcompose.ui.theme.JetpackComposeTheme
+import crewdaniel.practice.jetpackcompose.main.MainViewModel
+import crewdaniel.practice.jetpackcompose.model.Image
+
 
 class MainActivity : ComponentActivity() {
+    private val mainViewModel by viewModels<MainViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            App()
+            MainScreen(mainViewModel)
         }
     }
 }
 
 @Composable
-fun App() {
+fun MainScreen(mainViewModel: MainViewModel) {
+    val images = mainViewModel.images
     JetpackComposeTheme {
-        //  화면 바꾸기
-        MainScreen()
+        MainScaffold(images)
     }
 }
 
 @Composable
-fun MainScreen() {
-    MainScaffold()
-}
-
-@Composable
-fun MainScaffold() {
+fun MainScaffold(images: List<Image>) {
     Scaffold(
         topBar = { MainTopAppBar() },
         floatingActionButton = { MainFab() }
     ) {
-        MainBody(it)
+        MainBody(it, images)
     }
 }
 
@@ -75,9 +65,9 @@ fun MainFab() {
 }
 
 @Composable
-fun MainBody(paddingValues: PaddingValues) {
+fun MainBody(paddingValues: PaddingValues, images: List<Image>) {
     Surface(modifier = Modifier.padding(paddingValues = paddingValues)) {
-        ImageList()
+        ImageList(images)
     }
 }
 
