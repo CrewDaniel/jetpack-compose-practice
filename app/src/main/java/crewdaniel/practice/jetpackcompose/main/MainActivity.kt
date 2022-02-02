@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import crewdaniel.practice.jetpackcompose.ui.theme.JetpackComposeTheme
 import crewdaniel.practice.jetpackcompose.main.MainViewModel
 import crewdaniel.practice.jetpackcompose.model.Image
+import kotlinx.coroutines.flow.Flow
 
 
 class MainActivity : ComponentActivity() {
@@ -33,7 +34,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen(mainViewModel: MainViewModel) {
-    val images = mainViewModel.images
+    val images by mainViewModel.images.collectAsState(listOf())
     JetpackComposeTheme {
         MainScaffold(images)
     }
@@ -73,7 +74,14 @@ fun MainBody(paddingValues: PaddingValues, images: List<Image>) {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ImageList(images: List<Image> = listOf(Image("1"), Image("2"), Image("3"), Image("4"))) {
+fun ImageList(
+    images: List<Image> = listOf(
+        Image(title = "1"),
+        Image(title = "2"),
+        Image(title = "3"),
+        Image(title = "4")
+    )
+) {
     LazyVerticalGrid(cells = GridCells.Fixed(3)) {
         items(images) { image ->
             ImageItem(image = image)
@@ -91,5 +99,5 @@ fun ImageItem(image: Image) {
 @Preview
 @Composable
 fun PreviewImageList() {
-    ImageList(listOf(Image("title")))
+    ImageList(listOf(Image(title = "title")))
 }
