@@ -37,15 +37,15 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(mainViewModel: MainViewModel) {
     val images by mainViewModel.images.collectAsState(listOf())
     JetpackComposeTheme {
-        MainScaffold(images)
+        MainScaffold(images, { image -> mainViewModel.insertImage(image) })
     }
 }
 
 @Composable
-fun MainScaffold(images: List<Image>) {
+fun MainScaffold(images: List<Image>, onClick: (Image) -> Unit) {
     Scaffold(
         topBar = { MainTopAppBar() },
-        floatingActionButton = { MainFab() }
+        floatingActionButton = { MainFab(onClick = onClick) }
     ) {
         MainBody(it, images)
     }
@@ -57,8 +57,8 @@ fun MainTopAppBar() {
 }
 
 @Composable
-fun MainFab() {
-    FloatingActionButton(onClick = { /*TODO*/ }) {
+fun MainFab(onClick: (Image) -> Unit) {
+    FloatingActionButton(onClick = { onClick(Image(title = "title")) }) {
         Icon(
             imageVector = Icons.Filled.CameraAlt,
             contentDescription = "open camera"

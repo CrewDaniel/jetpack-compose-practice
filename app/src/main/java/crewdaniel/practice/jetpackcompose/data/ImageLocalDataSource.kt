@@ -9,4 +9,6 @@ import javax.inject.Singleton
 class ImageLocalDataSource @Inject constructor(private val imageDao: ImageDao) {
 
     val imageList: Flow<List<Image>> = imageDao.getImageList()
+
+    suspend fun insertImage(image: Image) = imageDao.insertImage(image)
 }
