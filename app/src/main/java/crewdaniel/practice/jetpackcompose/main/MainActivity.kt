@@ -18,9 +18,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import crewdaniel.practice.jetpackcompose.ui.theme.JetpackComposeTheme
 import crewdaniel.practice.jetpackcompose.main.MainViewModel
 import crewdaniel.practice.jetpackcompose.model.Image
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.Flow
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val mainViewModel by viewModels<MainViewModel>()
 

@@ -1,9 +1,11 @@
 package crewdaniel.practice.jetpackcompose.data
 
 import crewdaniel.practice.jetpackcompose.model.Image
-import crewdaniel.practice.jetpackcompose.model.ImageDao
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class ImageRepository(private val imageDao: ImageDao) {
-    val imageList: Flow<List<Image>> = imageDao.getImageList()
+class ImageRepository @Inject constructor(
+    private val localDataSource: ImageLocalDataSource
+) {
+    val imageList: Flow<List<Image>> = localDataSource.imageList
 }

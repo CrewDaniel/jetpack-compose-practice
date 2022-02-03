@@ -1,7 +1,8 @@
-package crewdaniel.practice.jetpackcompose.model
+package crewdaniel.practice.jetpackcompose.data
 
 import androidx.room.Dao
 import androidx.room.Query
+import crewdaniel.practice.jetpackcompose.model.Image
 import kotlinx.coroutines.flow.Flow
 
 @Dao
