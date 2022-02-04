@@ -1,10 +1,9 @@
 package crewdaniel.practice.jetpackcompose
 
-import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.viewModels
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
@@ -15,40 +14,49 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.content.ContextCompat.startActivity
-import crewdaniel.practice.jetpackcompose.camera.CameraActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
+import crewdaniel.practice.jetpackcompose.list.ListViewModel
 import crewdaniel.practice.jetpackcompose.ui.theme.JetpackComposeTheme
-import crewdaniel.practice.jetpackcompose.main.MainViewModel
 import crewdaniel.practice.jetpackcompose.model.Image
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.Flow
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
-    private val mainViewModel by viewModels<MainViewModel>()
+class ListFragment : Fragment() {
+    private val listViewModel by viewModels<ListViewModel>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = ComposeView(inflater.context).apply {
+        layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
+
         setContent {
-            MainScreen(mainViewModel)
+            ListScreen(listViewModel, { destination -> findNavController().navigate(destination) })
         }
     }
 }
 
 @Composable
-fun MainScreen(mainViewModel: MainViewModel) {
+fun ListScreen(mainViewModel: ListViewModel, onNavigate: (Int) -> Unit) {
     val images by mainViewModel.images.collectAsState(listOf())
     JetpackComposeTheme {
-        MainScaffold(images)
+        MainScaffold(images, onNavigate)
     }
 }
 
 @Composable
-fun MainScaffold(images: List<Image>) {
+fun MainScaffold(images: List<Image>, onNavigate: (Int) -> Unit) {
     Scaffold(
         topBar = { MainTopAppBar() },
-        floatingActionButton = { MainFab() }
+        floatingActionButton = { MainFab(onNavigate) }
     ) {
         MainBody(it, images)
     }
@@ -60,17 +68,13 @@ fun MainTopAppBar() {
 }
 
 @Composable
-fun MainFab() {
-    FloatingActionButton(onClick = { cameraPreview() }) {
+fun MainFab(onNavigate: (Int) -> Unit) {
+    FloatingActionButton(onClick = { onNavigate(R.id.nav_camera) }) {
         Icon(
             imageVector = Icons.Filled.CameraAlt,
-            contentDescription = "open camera"
+            contentDescription = "Open Camera"
         )
     }
-}
-
-fun cameraPreview() {
-
 }
 
 @Composable
@@ -90,7 +94,7 @@ fun ImageList(
         Image(title = "4")
     )
 ) {
-    LazyVerticalGrid(cells = GridCells.Fixed(3)) {
+    LazyVerticalGrid(cells = GridCells.Fixed(2)) {
         items(images) { image ->
             ImageItem(image = image)
         }

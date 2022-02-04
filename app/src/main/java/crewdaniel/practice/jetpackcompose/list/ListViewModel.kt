@@ -1,4 +1,4 @@
-package crewdaniel.practice.jetpackcompose.main
+package crewdaniel.practice.jetpackcompose.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
+class ListViewModel @Inject constructor(
     private val repository: ImageRepository
 ): ViewModel() {
     val images = repository.imageList
