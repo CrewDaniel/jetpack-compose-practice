@@ -1,5 +1,6 @@
 package crewdaniel.practice.jetpackcompose
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,6 +16,8 @@ import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.content.ContextCompat.startActivity
+import crewdaniel.practice.jetpackcompose.camera.CameraActivity
 import crewdaniel.practice.jetpackcompose.ui.theme.JetpackComposeTheme
 import crewdaniel.practice.jetpackcompose.main.MainViewModel
 import crewdaniel.practice.jetpackcompose.model.Image
@@ -37,15 +40,15 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(mainViewModel: MainViewModel) {
     val images by mainViewModel.images.collectAsState(listOf())
     JetpackComposeTheme {
-        MainScaffold(images, { image -> mainViewModel.insertImage(image) })
+        MainScaffold(images)
     }
 }
 
 @Composable
-fun MainScaffold(images: List<Image>, onClick: (Image) -> Unit) {
+fun MainScaffold(images: List<Image>) {
     Scaffold(
         topBar = { MainTopAppBar() },
-        floatingActionButton = { MainFab(onClick = onClick) }
+        floatingActionButton = { MainFab() }
     ) {
         MainBody(it, images)
     }
@@ -57,13 +60,17 @@ fun MainTopAppBar() {
 }
 
 @Composable
-fun MainFab(onClick: (Image) -> Unit) {
-    FloatingActionButton(onClick = { onClick(Image(title = "title")) }) {
+fun MainFab() {
+    FloatingActionButton(onClick = { cameraPreview() }) {
         Icon(
             imageVector = Icons.Filled.CameraAlt,
             contentDescription = "open camera"
         )
     }
+}
+
+fun cameraPreview() {
+
 }
 
 @Composable
