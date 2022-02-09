@@ -114,6 +114,7 @@ class CameraFragment : Fragment() {
         imageCapture.takePicture(outputFileOptions, cameraExecutor, object : ImageCapture.OnImageSavedCallback {
             override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                 println("SUCCESS")
+                println(outputFileResults.savedUri)
             }
 
             override fun onError(exception: ImageCaptureException) {

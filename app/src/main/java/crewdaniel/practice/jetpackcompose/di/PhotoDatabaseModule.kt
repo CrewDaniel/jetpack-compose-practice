@@ -1,8 +1,8 @@
 package crewdaniel.practice.jetpackcompose.di
 
 import android.content.Context
-import crewdaniel.practice.jetpackcompose.data.ImageDao
-import crewdaniel.practice.jetpackcompose.data.ImageDatabase
+import crewdaniel.practice.jetpackcompose.data.PhotoDao
+import crewdaniel.practice.jetpackcompose.data.PhotoDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,16 +12,16 @@ import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
-object ImageDatabaseModule {
+object PhotoDatabaseModule {
 
     @Provides
     @Singleton
-    fun provideDatabase(@ApplicationContext appContext: Context): ImageDatabase {
-        return ImageDatabase.getDatabase(appContext)
+    fun provideDatabase(@ApplicationContext appContext: Context): PhotoDatabase {
+        return PhotoDatabase.getDatabase(appContext)
     }
 
     @Provides
-    fun provideImageDao(database: ImageDatabase): ImageDao {
-        return database.imageDao()
+    fun providePhotoDao(database: PhotoDatabase): PhotoDao {
+        return database.PhotoDao()
     }
 }

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
@@ -15,13 +16,13 @@ import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import coil.compose.rememberImagePainter
 import crewdaniel.practice.jetpackcompose.list.ListViewModel
 import crewdaniel.practice.jetpackcompose.ui.theme.JetpackComposeTheme
-import crewdaniel.practice.jetpackcompose.model.Image
+import crewdaniel.practice.jetpackcompose.model.Photo
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -53,12 +54,12 @@ fun ListScreen(mainViewModel: ListViewModel, onNavigate: (Int) -> Unit) {
 }
 
 @Composable
-fun MainScaffold(images: List<Image>, onNavigate: (Int) -> Unit) {
+fun MainScaffold(photos: List<Photo>, onNavigate: (Int) -> Unit) {
     Scaffold(
         topBar = { MainTopAppBar() },
         floatingActionButton = { MainFab(onNavigate) }
     ) {
-        MainBody(it, images)
+        MainBody(it, photos)
     }
 }
 
@@ -78,38 +79,29 @@ fun MainFab(onNavigate: (Int) -> Unit) {
 }
 
 @Composable
-fun MainBody(paddingValues: PaddingValues, images: List<Image>) {
+fun MainBody(paddingValues: PaddingValues, photos: List<Photo>) {
     Surface(modifier = Modifier.padding(paddingValues = paddingValues)) {
-        ImageList(images)
+        ImageList(photos)
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ImageList(
-    images: List<Image> = listOf(
-        Image(title = "1"),
-        Image(title = "2"),
-        Image(title = "3"),
-        Image(title = "4")
-    )
-) {
+fun ImageList(photos: List<Photo>) {
     LazyVerticalGrid(cells = GridCells.Fixed(2)) {
-        items(images) { image ->
-            ImageItem(image = image)
+        items(photos) { image ->
+            ImageItem(photo = image)
         }
     }
 }
 
 @Composable
-fun ImageItem(image: Image) {
+fun ImageItem(photo: Photo) {
     Card {
-        Text(text = image.title)
+        Image(
+            painter = rememberImagePainter(photo.uri),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize()
+        )
     }
-}
-
-@Preview
-@Composable
-fun PreviewImageList() {
-    ImageList(listOf(Image(title = "title")))
 }

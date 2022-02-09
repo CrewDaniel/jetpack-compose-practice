@@ -4,22 +4,22 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import crewdaniel.practice.jetpackcompose.model.Image
+import crewdaniel.practice.jetpackcompose.model.Photo
 
-@Database(entities = [Image::class], version = 1, exportSchema = false)
-abstract class ImageDatabase : RoomDatabase() {
+@Database(entities = [Photo::class], version = 1, exportSchema = false)
+abstract class PhotoDatabase : RoomDatabase() {
 
-    abstract fun imageDao(): ImageDao
+    abstract fun PhotoDao(): PhotoDao
 
     companion object {
         @Volatile
-        private var INSTANCE: ImageDatabase? = null
+        private var INSTANCE: PhotoDatabase? = null
 
-        fun getDatabase(context: Context): ImageDatabase {
+        fun getDatabase(context: Context): PhotoDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
-                    ImageDatabase::class.java,
+                    PhotoDatabase::class.java,
                     "image_database"
                 ).build()
                 INSTANCE = instance
