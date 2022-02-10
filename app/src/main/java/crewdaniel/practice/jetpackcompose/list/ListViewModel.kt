@@ -13,10 +13,4 @@ class ListViewModel @Inject constructor(
     private val repository: PhotoRepository
 ): ViewModel() {
     val images = repository.photoList
-
-    fun insertPhoto(photo: Photo) {
-        viewModelScope.launch {
-            repository.insertPhoto(photo)
-        }
-    }
 }

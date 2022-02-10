@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
@@ -101,7 +102,7 @@ fun ImageItem(photo: Photo) {
         Image(
             painter = rememberImagePainter(photo.uri),
             contentDescription = null,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.size(64.dp)
         )
     }
 }
