@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
 import com.google.common.util.concurrent.ListenableFuture
 import crewdaniel.practice.jetpackcompose.databinding.FragmentCameraBinding
@@ -28,6 +30,7 @@ import java.util.concurrent.Executors
 
 @AndroidEntryPoint
 class CameraFragment : Fragment() {
+    private val cameraViewModel by viewModels<CameraViewModel>()
     private lateinit var binding: FragmentCameraBinding
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
     private lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider>
@@ -62,9 +65,9 @@ class CameraFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        cameraViewModel
 
         cameraExecutor = Executors.newSingleThreadExecutor()
-
         when {
             ContextCompat.checkSelfPermission(
                 requireContext(),
@@ -113,14 +116,19 @@ class CameraFragment : Fragment() {
             ImageCapture.OutputFileOptions.Builder(File(requireContext().filesDir, "${currentUnixTime}.jpg")).build()
         imageCapture.takePicture(outputFileOptions, cameraExecutor, object : ImageCapture.OnImageSavedCallback {
             override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                println("SUCCESS")
-                println(outputFileResults.savedUri)
+//                ui 스레드에서 viewModel이 호출되어야 함
+                cameraViewModel.insertPhoto(outputFileResults.savedUri.toString())
+
             }
 
             override fun onError(exception: ImageCaptureException) {
-                println("FAIL")
+                Log.d(TAG, exception.message ?: "unknown error")
             }
 
         })
+    }
+
+    companion object {
+        const val TAG = "CameraFragment"
     }
 }
